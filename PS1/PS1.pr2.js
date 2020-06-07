@@ -1,0 +1,1 @@
+const pr2 = expression => eval(expression);

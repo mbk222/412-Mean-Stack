@@ -1,0 +1,1 @@
+const pr1 = str => str.replace(/[.,\/#@!$%\^&\*;:{}=\-_`~()]/g,"").split('').sort().join('');
