@@ -2,6 +2,11 @@ const router = require('express').Router();
 const fetch = require('node-fetch');        // to define fetch()
 require('dotenv').config();                 // to read .env 
 
+
+// REDIS
+const redis = require('redis');
+const client = redis.createClient(6739);
+
 router.get('/', (req, res) => {
     res.render("index", {
         city: null,
@@ -13,7 +18,6 @@ router.get('/', (req, res) => {
 
 router.post('/', async (req,res) => {
     const city = req.body.city;
-
     const url_api = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${process.env.API_KEY}`; // key stored in .env file
 
     try {
@@ -27,14 +31,24 @@ router.post('/', async (req,res) => {
                             icon: null,
                             temp: null
                         }) 
-                    } else {
+                    } else { // City found
+                        const info = {
+                            "city" : data.name,
+                            "des"  : data.weather[0].description,
+                            "icon" : data.weather[0].icon,
+                            "temp" : data.main.temp
+                        }
+                        const info_JSON = JSON.stringify(info); // creates JSON 
+                        client.setex(city, 30, info_JSON);  // caches JSON to redis only if key does not already exist, expires in 30 seconds
+                        
                         const city = data.name;
                         const des = data.weather[0].description;
                         const icon = data.weather[0].icon;
                         const temp = kelvinF(data.main.temp).toFixed(1); // API returns temp in K, it is converted to F here.
 
                         res.render('index', {
-                            city, des, icon, temp
+                            //city, des, icon, temp
+                            info_JSON // rendering from JSON
                         })
                     }
                 });
@@ -50,6 +64,9 @@ router.post('/', async (req,res) => {
     
 })
 
+
+
 module.exports = router;
 
 const kelvinF = (k) => {  return 9/5 * (k - 273.15) + 32 } // K to F conversion
+
