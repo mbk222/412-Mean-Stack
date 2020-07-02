@@ -1,0 +1,45 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Search</title>
+</head>
+<body>
+    <div class="container">
+        <header>
+
+        </header>
+        <div class="weather title">
+            <h1> Weather Search </h1>
+            <p>Enter a city to search relevant weather information </p>
+        </div>
+        <form action="/" method="POST">
+        <input type="text" name="city" class="input"
+        placeholder="Enter city name"> 
+    </form>
+
+    <div class="result">
+        <% if (temp !== null) {%>
+            <h1 class="temp"><%= temp %></h1>
+        <% } %>
+        
+        <div class="icons-des">
+            <% if (icon !== null) {%>
+                    <img class= "icon" src="http://openweathermap.org/img/w/<%= icon %>.png" alt="">
+             <% } %>
+            
+        </div>
+        <% if (des !== null) {%>
+            <h3> <%= des %> </h3>
+        <% } %>
+        
+    </div>
+    <% if (city !== null) {%>
+        <p class="city"> <%= city %></p>
+    <% } %>
+    
+    </div>
+</body>
+</html>

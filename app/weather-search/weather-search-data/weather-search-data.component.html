@@ -1,0 +1,8 @@
+<p>weather-search-data works!</p>
+
+<div *ngIf="weatherData"> <!-- checks whether form is valid -->
+  <div *ngFor="let item of weatherData.main | keyvalue "> <!-- iterates through data -->
+  <div>{{ item.value }}</div>
+</div>
+</div>
+
